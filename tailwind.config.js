@@ -55,12 +55,21 @@ module.exports = {
         danger: token('danger'),
         'on-danger': token('on-danger'),
         focus: token('focus'), // the keyboard focus ring
+        'card-back': token('card-back'), // the face-down card backs
+        'card-back-line': token('card-back-line'), // the stripe on the backs
+      },
+      fontFamily: {
+        sans: ['system-ui', '-apple-system', '"Segoe UI"', 'sans-serif'],
+        // Rounded face for the app name, the question on the card, the
+        // winner's name and the initials: friendly, a little like a party
+        // game box. System only; nothing is downloaded.
+        rounded: ['ui-rounded', '"SF Pro Rounded"', 'system-ui', 'sans-serif'],
       },
       // The type scale: four sizes, and nothing in between.
       fontSize: {
         small: ['0.875rem', { lineHeight: '1.25rem' }],
         body: ['1rem', { lineHeight: '1.5rem' }],
-        heading: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '600' }],
+        heading: ['1.25rem', { lineHeight: '1.75rem', fontWeight: '700' }],
         title: ['1.75rem', { lineHeight: '2.25rem', fontWeight: '700' }],
       },
     },

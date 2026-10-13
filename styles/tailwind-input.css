@@ -18,41 +18,47 @@
  * bg-accent with text-on-accent, ...). :root is the light look, and .dark,
  * which the theme script in public/index.html sets on <html>, the dark one.
  *
- * Re-theme the app HERE: change the values, keep the names. The defaults
- * (warm greys, one teal accent) are a quiet starting point, not a look.
+ * The palette: warm greys everywhere and one violet accent — the colour of
+ * a stage curtain and of the app's theatre-mask icon. card-back and
+ * card-back-line paint the face-down cards of the deck.
  * Keep every text pair at 4.5:1 or more in both looks: fg and muted on
  * ground, surface and raised; accent and danger on ground and surface;
  * on-accent on accent; on-danger on danger.
- *
- * Adopting the native UI kit later? Point its --un-accent and
- * --un-accent-contrast at the accent and on-accent tokens.
  */
 @layer base {
   :root {
-    --ground: 250 250 249;    /* the page */
-    --surface: 255 255 255;   /* lists, cards, fields */
-    --raised: 245 245 244;    /* hovers, badges */
-    --fg: 28 25 23;           /* text */
-    --muted: 87 83 78;        /* secondary text */
-    --line: 231 229 228;      /* borders, dividers, skeletons */
-    --accent: 15 118 110;     /* the one accent */
-    --on-accent: 255 255 255; /* text on the accent */
+    --ground: 250 249 247;         /* the page, warm grey */
+    --surface: 255 255 255;        /* the card face, name buttons, lists, fields */
+    --raised: 244 242 239;         /* initials circles, empty bars */
+    --fg: 28 25 23;                /* text */
+    --muted: 87 83 78;             /* secondary text */
+    --line: 229 226 222;           /* borders, unfilled vote bars */
+    --accent: 109 40 217;          /* violet: your pick, vote bars, the crown, Next question */
+    --on-accent: 255 255 255;      /* text on the accent */
+    --card-back: 76 29 149;        /* the face-down card backs */
+    --card-back-line: 109 40 217;  /* the stripe on the card backs */
     --danger: 185 28 28;
     --on-danger: 255 255 255;
-    --focus: 13 148 136;      /* the keyboard focus ring */
+    --focus: 124 58 237;           /* the keyboard focus ring */
+    --un-accent: var(--accent);
+    --un-accent-contrast: var(--on-accent);
   }
   .dark {
-    --ground: 12 10 9;
-    --surface: 28 25 23;
-    --raised: 41 37 36;
-    --fg: 245 245 244;
+    --ground: 17 15 14;
+    --surface: 30 27 25;
+    --raised: 44 40 37;
+    --fg: 245 244 242;
     --muted: 168 162 158;
     --line: 68 64 60;
-    --accent: 45 212 191;
-    --on-accent: 4 47 46;
+    --accent: 167 139 250;
+    --on-accent: 36 14 82;
+    --card-back: 59 22 120;
+    --card-back-line: 91 33 182;
     --danger: 248 113 113;
     --on-danger: 69 10 10;
-    --focus: 94 234 212;
+    --focus: 196 181 253;
+    --un-accent: var(--accent);
+    --un-accent-contrast: var(--on-accent);
   }
   /* el.hidden = true hides an element even when a class gives it a display
      (flex, the components below). */
@@ -62,10 +68,10 @@
 }
 
 /* ── Components ───────────────────────────────────────────────────────────
- * A small starting kit on the tokens. Use these rather than restyling the
- * same thing by hand, add to them sparingly, and change a component here
- * rather than one copy of it. Type: text-title, text-heading, text-body and
- * text-small (tailwind.config.js), nothing in between.
+ * A small kit on the tokens. Use these rather than restyling the same thing
+ * by hand, add to them sparingly, and change a component here rather than
+ * one copy of it. Type: text-title, text-heading, text-body and text-small
+ * (tailwind.config.js), nothing in between.
  */
 @layer components {
   /* Buttons: one primary per screen, the rest secondary. At least 44 px
@@ -124,5 +130,80 @@
   .state-empty,
   .state-error {
     @apply flex flex-col items-center gap-2 px-4 py-8 text-center;
+  }
+
+  /* ── The card on the deck ──────────────────────────────────────────────
+     The signature element: the current question as a playing card lying
+     face up on two face-down cards fanned slightly behind it. The backs are
+     deep violet with a fine diagonal stripe, like the back of a real deck.
+     On the reveal the top card turns over (card-flip turns the inner
+     element 180°; both faces sit absolutely inside it, each with
+     backface-visibility hidden). Reduced motion swaps without turning. */
+  .card-stack {
+    @apply relative mx-2 mt-1;
+    height: 236px;
+    perspective: 1200px;
+  }
+  .card-back {
+    @apply absolute inset-0 rounded-2xl;
+    background-color: rgb(var(--card-back));
+    background-image: repeating-linear-gradient(
+      45deg, rgb(var(--card-back-line)) 0 2px, transparent 2px 12px);
+    border: 6px solid rgb(var(--card-back));
+  }
+  .card-back-a { transform: rotate(-5deg) translate(-6px, 6px); }
+  .card-back-b { transform: rotate(3.5deg) translate(8px, 4px); }
+  .card-face {
+    @apply absolute inset-0 flex flex-col rounded-2xl border border-line bg-surface p-5
+      shadow-lg;
+    box-shadow: 0 12px 24px -14px rgb(var(--fg) / 0.4);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+  }
+  .card-face-reveal {
+    @apply items-center justify-center gap-1 border-accent text-center;
+    border-width: 2px;
+    transform: rotateY(180deg);
+  }
+  .card-flip {
+    @apply relative h-full w-full;
+    transition: transform 0.6s ease;
+    transform-style: preserve-3d;
+  }
+  .card-flip.is-revealed { transform: rotateY(180deg); }
+  .card-flip.no-anim { transition: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .card-flip { transition: none; }
+  }
+
+  /* A name to tap: the round's main action, 56 px tall, two columns.
+     .is-picked is your vote while the round is open. */
+  .name-btn {
+    @apply flex min-h-14 items-center gap-2.5 rounded-xl border border-line bg-surface px-3 py-2
+      text-left text-body text-fg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus;
+  }
+  .name-btn.is-picked {
+    @apply border-accent bg-accent/10;
+  }
+  .initial {
+    @apply flex h-8 w-8 flex-none items-center justify-center rounded-full bg-raised text-small font-bold;
+    font-family: theme('fontFamily.rounded');
+  }
+  .name-btn.is-picked .initial {
+    @apply bg-accent text-on-accent;
+  }
+
+  /* Vote status: one small bar per person, filling violet as people vote. */
+  .vote-pip {
+    @apply h-1.5 w-6 rounded-full bg-line;
+  }
+  .vote-pip.on { @apply bg-accent; }
+
+  /* A tally row's bar. */
+  .tally-bar {
+    @apply h-2 w-full rounded-full bg-raised;
+  }
+  .tally-bar > i {
+    @apply block h-2 rounded-full bg-accent;
   }
 }

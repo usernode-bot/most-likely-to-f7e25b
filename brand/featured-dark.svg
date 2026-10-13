@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900">
+  <!-- Most Likely To featured icon, dark version: yellow mark on black.
+       Same mark as brand/icon.svg, scaled 0.7 and centred. -->
+  <rect width="1600" height="900" fill="#000000"/>
+  <g transform="translate(800 450) scale(0.7) translate(-512 -491)">
+    <rect x="420" y="96" width="184" height="64" rx="16" fill="#FFEE6F"/>
+    <rect x="380" y="176" width="264" height="190" rx="72" fill="#FFEE6F"/>
+    <rect x="468" y="300" width="88" height="230" rx="44" fill="#FFEE6F"/>
+    <circle cx="282" cy="786" r="100" fill="#FFEE6F"/>
+    <circle cx="742" cy="786" r="100" fill="#FFEE6F"/>
+    <circle cx="512" cy="742" r="128" fill="#FFEE6F" stroke="#000000" stroke-width="28"/>
+    <circle cx="472" cy="725" r="14" fill="#000000"/>
+    <circle cx="552" cy="725" r="14" fill="#000000"/>
+    <circle cx="252" cy="770" r="12" fill="#000000"/>
+    <circle cx="312" cy="770" r="12" fill="#000000"/>
+    <circle cx="712" cy="770" r="12" fill="#000000"/>
+    <circle cx="772" cy="770" r="12" fill="#000000"/>
+    <path d="M466 790 Q512 830 558 790" fill="none" stroke="#000000" stroke-width="14" stroke-linecap="round"/>
+  </g>
+</svg>
